@@ -5,6 +5,8 @@ import { css } from '@emotion/react'
 import Flex from '@shared/Flex'
 import { colors } from '@/styles/colorPalette'
 import { zIndex } from '@/styles/zIndex'
+import useUser from '@/hooks/auth/useUser'
+import useGoogleSignin from '@/hooks/useGoogleSignin'
 
 function StyledLink({
   to,
@@ -25,8 +27,11 @@ function StyledLink({
 
 function Navbar() {
   const location = useLocation()
+  const { signout } = useGoogleSignin()
   const showSigninButton =
     ['/signup', 'signin'].includes(location.pathname) === false
+  const user = useUser()
+  console.log('user : ', user)
 
   const renderButtons = useCallback(() => {
     return (
@@ -34,6 +39,7 @@ function Navbar() {
         <StyledLink to="/plan">계획</StyledLink>
         <StyledLink to="/checklist">체크리스트</StyledLink>
         {showSigninButton && <StyledLink to="/signin">로그인</StyledLink>}
+        {showSigninButton && user && <span onClick={signout}>로그아웃</span>}
       </Flex>
     )
   }, [showSigninButton])
